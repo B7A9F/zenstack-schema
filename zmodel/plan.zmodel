@@ -1,0 +1,36 @@
+import "user"
+import "restaurant/restaurant"
+
+model Plan {
+    id Int @id @default(autoincrement())
+    type String
+    price Float
+    options PlanOption[]
+    restaurants Restaurant[]
+}
+
+model Option {
+    id Int @id @default(autoincrement())
+    name String
+    price Float
+    discountType String
+    discountValue Float
+    plans PlanOption[]
+}
+
+model PlanOption {
+    id Int @id() @default(autoincrement())
+
+    planId Int
+    optionId Int
+    plan Plan @relation(fields: [planId], references: [id])
+    option Option @relation(fields: [optionId], references: [id])
+    @@unique([planId, optionId])
+}
+
+enum PlanType {
+    FREE_MONTHLY
+    FREE_ANNUALY
+    PRO
+    BUSINESS
+}

@@ -1,0 +1,60 @@
+import "user"
+import "restaurant/restaurant"
+import "plan"
+
+
+abstract model base {
+    id Int @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    @@allow('all', true)
+}
+
+abstract model partnerBaseEntity {
+    id Int @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    // isDeleted Boolean @default(false) @omit
+    // isPublic Boolean @default(false)
+    owner Partner @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId Int
+    @@allow('all', true)
+
+    
+
+    // // when create, owner must be set to current user, and user must be in the organization
+    // @@allow('create', owner == auth() && org.members?[this == auth()])
+    // // only the owner can update it and is not allowed to change the owner
+    // @@allow('update', owner == auth() && org.members?[this == auth()] && future().owner == owner)
+    // // allow owner to read
+    // @@allow('read', owner == auth())
+    // // allow shared group members to read it
+    // @@allow('read', groups?[users?[this == auth()]])
+    // // allow organization to access if public
+    // @@allow('read', isPublic && org.members?[this == auth()])
+    // // can not be read if deleted
+    // @@deny('all', isDeleted == true)
+}
+
+abstract model organizationBaseEntity {
+    id Int @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    // isDeleted Boolean @default(false) @omit
+    // isPublic Boolean @default(false)
+    owner Partner @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId Int
+
+    restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+    restaurantId Int
+    @@allow('all', true)
+}
+
+abstract model restaurantBaseEntity {
+    id Int @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+    restaurantId Int
+    @@allow('all', true)
+}

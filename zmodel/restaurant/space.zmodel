@@ -1,0 +1,48 @@
+import "../@base"
+import "../user"
+import "restaurant"
+
+model Space extends restaurantBaseEntity {
+    name String
+    tables Table[]
+
+    @@unique([restaurantId, id])
+}
+
+model Table extends restaurantBaseEntity {
+    name String
+    seats Int
+    qrCode String?
+    status String
+    space Space @relation(fields: [spaceId], references: [id])
+    spaceId Int
+    reservations Reservation[]
+    parentId Int? 
+    parent Table? @relation("GroupParent", fields: [parentId], references: [id])
+    group Table[] @relation("GroupParent")
+    waiters WaitersTable[]
+    @@unique([restaurantId, id])
+}
+
+model Reservation extends restaurantBaseEntity {
+    bookingCapacity Int
+    bookingTimestamp DateTime
+    estimatedStayDuration String
+    status String @default("NEW")
+    bookingNote String?
+    clientId Int?
+    client Client? @relation(fields: [clientId], references: [id])
+    phoneNumber String
+    name String
+    email String?
+    tableId Int?
+    table Table? @relation(fields: [tableId], references: [id])
+    @@unique([restaurantId, id])
+}
+
+model WaitersTable extends restaurantBaseEntity {
+    tableId Int
+    table Table @relation(fields: [tableId], references: [id])
+    employeeId Int
+    employee Employee @relation(fields: [employeeId], references: [id])
+}

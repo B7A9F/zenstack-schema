@@ -1,0 +1,103 @@
+import "../@base"
+import "../user"
+import "restaurant"
+
+model Menu extends restaurantBaseEntity {
+    name String
+    categories MenuCategory[]
+    subcategories MenuSubCategory[]
+
+    @@unique([restaurantId])
+}
+
+model MenuCategory extends restaurantBaseEntity {
+    name String
+    description String?
+    availability Boolean @default(false)
+    photo String?
+    items MenuItem[]
+    menu Menu @relation(fields: [menuId], references: [id])
+    menuId Int
+    subcategories MenuSubCategory[]
+
+}
+
+model MenuSubCategory extends restaurantBaseEntity {
+    name String
+    description String?
+    availability Boolean @default(false)
+    category MenuCategory @relation(fields: [menuCategoryId], references: [id])
+    menuCategoryId Int
+    items MenuItem[]
+    menu Menu @relation(fields: [menuId], references: [id])
+    menuId Int
+    
+}
+
+
+model MenuItem extends restaurantBaseEntity {
+    name String
+    description String?
+    price Float
+    discountedPrice Float?
+    availability Boolean @default(false)
+    photo String?
+    weight Float?
+    productionTime Int?
+    dishType String?
+    labels String?
+    ingredients String?
+    alergens String?
+    kcal Float?
+    fat Float?
+    saturatedFattyAcids Float?
+    carbohydrates Float?
+    sugar Float? 
+    protein Float? 
+    salt Float?
+    category MenuCategory @relation(fields: [menuCategoryId], references: [id])
+    menuCategoryId Int
+    subcategory MenuSubCategory?  @relation(fields: [menuSubcategoryId], references: [id])
+    menuSubcategoryId Int?
+    productionArea ProductionArea? @relation(fields: [productionAreaId], references: [id])
+    productionAreaId Int?
+    recommendations ProductRecommendation[] @relation("recommendation")
+    recommendedBy ProductRecommendation[] @relation("recommendedBy")
+}
+model ProductRecommendation extends restaurantBaseEntity {
+    recommendedById Int
+    recommendedBy MenuItem @relation("recommendedBy", fields: [recommendedById], references: [id])
+    recommendationId Int
+    recommendation MenuItem @relation("recommendation", fields: [recommendationId], references: [id])
+    @@unique([recommendedById, recommendationId])
+}
+
+
+model ProductionArea extends restaurantBaseEntity {
+    name String
+    menuItems MenuItem[]
+    employees ProductionAreaEmployees[]
+}
+
+model ProductionAreaEmployees extends restaurantBaseEntity {
+    productionAreaId Int
+    area ProductionArea @relation(fields: [productionAreaId], references: [id])
+    employeeId Int
+    employee Employee @relation(fields: [employeeId], references: [id])
+}
+
+enum Allergen {
+    GLUTEN
+    DAIRY
+    EGGS
+    FISH
+    SHELLFISH
+    TREE_NUTS
+    PEANUTS
+    SOY
+    WHEAT
+    SESAME
+    SULFITES
+    MUSTARD
+    LUPIN
+}

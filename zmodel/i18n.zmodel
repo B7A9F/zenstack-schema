@@ -1,0 +1,30 @@
+import "@base"
+import "./restaurant/menu.zmodel"
+import "./restaurant/restaurant.zmodel"
+import "user"
+
+model Language extends base {
+    name String
+    symbol String
+    client Client[]
+    restaurant Restaurant[]
+    // restaurantContents OrgTextContent[]
+    // restaurantTranslations OrgTranslation[]
+}
+
+
+
+// model OrgTextContent extends restaurantBaseEntity {
+//     originalText String
+//     originalLanguageId Int
+//     lang Language? @relation(fields: [originalLanguageId], references: [id])
+//     translations OrgTranslation[]
+//    }
+
+// model OrgTranslation extends restaurantBaseEntity {
+//     textContentId Int
+//     langId Int
+//     lang Language @relation(fields: [langId], references: [id])
+//     originalContent OrgTextContent @relation(fields: [textContentId], references: [id])
+// }
+

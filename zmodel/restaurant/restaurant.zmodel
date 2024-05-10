@@ -1,0 +1,132 @@
+import "../user"
+import "../plan"
+import "../@base"
+import "menu"
+import "../i18n"
+import "../system"
+import "space"
+model Restaurant extends partnerBaseEntity {
+    name String
+    type String
+    kitchenType String?
+    description String
+    priceLevel String
+    schedule RestaurantSchedule[]
+    email String?
+    phoneNumber String?
+    employees Employee[]
+    plan Plan? @relation(fields: [planId], references: [id])
+    planId Int?
+    menu Menu?
+    categories MenuCategory[]
+    subcategories MenuSubCategory[]
+    products MenuItem[]
+    productionAreas ProductionArea[]
+    menuRecommendations ProductRecommendation[]
+    productionAreasWithEmployes ProductionAreaEmployees[]
+    facilities RestaurantFacilities[]
+    photos RestaurantPhoto[]
+    waiterDeliveryTime Int?
+    cashbackPercentInt Int
+    showPreparationTimeInMenu Boolean?
+    langId Int?
+    language Language? @relation(fields: [langId], references: [id])
+    currencyId Int?
+    currency Currency? @relation(fields: [currencyId], references: [id])
+    addressId Int? @unique
+    address Address? @relation(fields: [addressId], references: [id])
+    spaces Space[]
+    tables Table[]
+    reservations Reservation[]
+    waitersTables WaitersTable[]
+
+    @@allow('read', true)
+}
+
+model RestaurantSchedule extends restaurantBaseEntity {
+    day String
+    openHour String
+    closeHour String
+
+    startBreak String?
+    stopBreak String?
+}
+model RestaurantFacilities extends restaurantBaseEntity {
+    facility Facility @relation(fields: [faciliyId], references: [id])
+    faciliyId Int
+    @@unique([restaurantId, faciliyId])
+}
+
+
+enum Day {
+    SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+}
+
+enum PriceLevel {
+    CHEAP
+    MEDIUM
+    EXPENSIVE
+}
+
+enum RestaurantType {
+    FAST_FOOD
+    FINE_DINING
+    BAR
+    CAFE
+    BISTRO
+    BRASSERIE
+    PIZZERIA
+    STEAKHOUSE
+    SEAFOOD_RESTAURANT
+    SUSHI_BAR
+    VEGETARIAN_RESTAURANT
+    VEGAN_CAFE
+    BUFFET_RESTAURANT
+    FOOD_TRUCK
+    DINER
+    DRIVE_THRU_RESTAURANT
+    ETHNIC_RESTAURANT_ITALIAN
+    ETHNIC_RESTAURANT_MEXICAN
+    ETHNIC_RESTAURANT_CHINESE
+    FUSION_RESTAURANT
+    FAMILY_RESTAURANT
+    SPORTS_BAR
+    BREWPUB
+    TEAHOUSE
+    COFFEE_SHOP
+    BAKERY
+    ICE_CREAM_PARLOR
+    DELI
+    WINE_BAR
+    TIKI_BAR
+    PUB
+    GASTROPUB
+    ROOFTOP_RESTAURANT
+    FOOD_COURT
+    CASUAL_DINING_RESTAURANT
+    FARM_TO_TABLE_RESTAURANT
+    BBQ_JOINT
+    NOODLE_HOUSE
+    OYSTER_BAR
+    SWEETS_SHOP
+    SALSA_CLUB
+    TAPAS_BAR
+    FONDUE_RESTAURANT
+    FOOD_HALL
+    DRIVE_IN_RESTAURANT
+    DIM_SUM_RESTAURANT
+    CIGAR_LOUNGE
+    SAKE_BAR
+    MICROBREWERY
+    TASTING_ROOM
+    BEACHFRONT_RESTAURANT
+    POP_UP_RESTAURANT
+    FOOD_DELIVERY_SERVICE
+    CATERING_SERVICE
+}

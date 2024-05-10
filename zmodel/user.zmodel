@@ -1,0 +1,79 @@
+import "plan"
+import "restaurant/restaurant"
+import "@base"
+import "i18n"
+import "system"
+import "restaurant/space"
+import "restaurant/menu"
+model User extends base {
+    name String?
+    surname String?
+    phoneNumber String?
+    password String
+    email String @email @unique
+    intern Intern?
+    partner Partner?
+    client Client?
+    employees Employee[]
+
+    // access policy: open to sign up
+    // everyone can sign up
+    @@allow('create', true)
+
+    @@allow('read', true)
+    @@allow('update', true)
+
+    // full access by oneself
+    @@allow('all', auth() == this)
+}
+
+model Intern extends base {
+    user User @relation(fields: [userId], references: [id])
+    userId Int @unique
+    role InternRole
+    managerId Int?
+    manager Intern? @relation("ManagerEmployees", fields: [managerId], references: [id])
+    commission Float?
+    employees Intern[] @relation("ManagerEmployees")
+    partners Partner[]
+}
+
+model Partner extends base {
+    userId Int @unique
+    user User @relation(fields: [userId], references: [id])
+    internId Int?
+    support Intern? @relation(fields: [internId], references: [id], onDelete: Cascade)
+    restaurants Restaurant[]
+    employees Employee[]
+}
+
+model Employee extends organizationBaseEntity {
+    user User @relation(fields: [userId], references: [id])
+    userId Int @unique
+    role String
+    productionAreas ProductionAreaEmployees[]
+    tables WaitersTable[]
+    @@unique([userId, restaurantId])
+}
+
+model Client extends base {
+    userId Int @unique
+    user User @relation(fields: [userId], references: [id])
+    langId Int?
+    language Language? @relation(fields: [langId], references: [id])
+    currencyId Int?
+    currency Currency? @relation(fields: [currencyId], references: [id])
+    addressId Int? @unique
+    address Address? @relation(fields: [addressId], references: [id])
+    reservations Reservation[]
+}
+
+
+
+enum InternRole {
+    OPERATOR
+    AGENT
+    PROMOTER
+}
+
+

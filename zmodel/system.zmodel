@@ -1,0 +1,44 @@
+import "@base"
+import "./restaurant/menu.zmodel"
+import "./restaurant/restaurant.zmodel"
+import "user"
+model Address extends base {
+    name String
+    country String
+    city String
+    street String
+    number Int
+    building String
+    floor String
+    appartment String
+    latitude Float?
+    longitude Float?
+    restaurant Restaurant?
+    client Client?
+}
+
+model Currency extends base {
+    name String
+    symbol String
+    client Client[]
+    restaurant Restaurant[]
+}
+
+
+model Image extends base {
+    alt String
+    url String
+    restaurantPhotos RestaurantPhoto[]
+}
+
+
+model Facility extends base {
+    name String
+    icon String
+    restaurants RestaurantFacilities[]
+}
+model RestaurantPhoto extends restaurantBaseEntity {
+    imageId Int
+    image Image @relation(fields: [imageId], references: [id])
+    type String
+}
